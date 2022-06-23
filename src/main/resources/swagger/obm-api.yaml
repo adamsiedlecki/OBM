@@ -46,6 +46,6 @@ definitions:
         type: integer
       text:
         description: "Text representation of the broadcast"
-        type: integer
+        type: string
     required:
       - text
