@@ -1,0 +1,51 @@
+swagger: "2.0"
+info:
+  description: "Service for OrchardBroadcastMonitor"
+  version: "1.0.0"
+  title: ""
+tags:
+  - name: "OBM"
+    externalDocs:
+      description: "Find out more"
+      url: "https://github.com/adamsiedlecki/OBM"
+schemes:
+  - "https"
+  - "http"
+paths:
+  /broadcasts:
+    post:
+      tags:
+        - "OBM"
+      summary: "Processes broadcast information"
+      operationId: "processBroadcastInformation"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "BroadcastInfoInput"
+          description: Body of the broadcast infotmation request
+          required: true
+          schema:
+            $ref: "#/definitions/BroadcastInfoInput"
+      responses:
+        "200":
+          description: "OK"
+        "400":
+          description: "Bad request, text property is required!"
+        "500":
+          description: "Unexpected error."
+
+definitions:
+  BroadcastInfoInput:
+    type: "object"
+    properties:
+      rssi:
+        description: "Received Signal Strength Indication"
+        type: integer
+      text:
+        description: "Text representation of the broadcast"
+        type: integer
+    required:
+      - text
