@@ -1,7 +1,6 @@
 package pl.adamsiedlecki.obm.broadcast
 
-import org.apache.tomcat.jni.Local
-import org.springframework.beans.factory.annotation.Autowired
+import org.spockframework.spring.SpringSpy
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.server.LocalServerPort
 import org.springframework.http.MediaType
@@ -9,8 +8,8 @@ import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
 import org.springframework.test.web.reactive.server.WebTestClient
 import org.testcontainers.containers.MongoDBContainer
-import pl.adamsiedlecki.obm.mongo.document.MessageTypeEnum
-import pl.adamsiedlecki.obm.mongo.repo.BroadcastDocumentRepo
+import pl.adamsiedlecki.obm.dto.MessageTypeEnumDto
+import pl.adamsiedlecki.obm.facade.BroadcastDbFacade
 import spock.lang.Specification
 
 import java.time.LocalDateTime
@@ -21,8 +20,8 @@ class BroadcastApiControllerSpringTest extends Specification {
     @LocalServerPort
     int randomServerPort
 
-    @Autowired
-    BroadcastDocumentRepo broadcastDocumentRepo
+    @SpringSpy
+    BroadcastDbFacade broadcastDbFacade
 
     WebTestClient webTestClient
     static final MongoDBContainer mongoDbContainer = new MongoDBContainer("mongo:4.0.10")
@@ -41,7 +40,7 @@ class BroadcastApiControllerSpringTest extends Specification {
                 .bindToServer()
                 .baseUrl("http://localhost:" + randomServerPort + "/api/v1/broadcasts")
                 .build()
-        broadcastDocumentRepo.deleteAll()
+        broadcastDbFacade.deleteAll()
     }
 
     def "should process request correctly and save broadcast to database"() {
@@ -51,15 +50,15 @@ class BroadcastApiControllerSpringTest extends Specification {
         expect:
             webTestClient.post().contentType(MediaType.APPLICATION_JSON).bodyValue(requestJson).exchange().expectStatus().is2xxSuccessful()
 
-            def dbResults = broadcastDocumentRepo.findAll()
+            def dbResults = broadcastDbFacade.findAll()
             LocalDateTime now = LocalDateTime.now()
 
             dbResults.size() == 1
-            dbResults[0].text == "radio message"
-            dbResults[0].rssi == 67
-            dbResults[0].messageTypeEnum == MessageTypeEnum.UNKNOWN
-            dbResults[0].dateTime.isBefore(now)
-            dbResults[0].dateTime.isAfter(now.minusMinutes(5))
+            dbResults[0].text() == "radio message"
+            dbResults[0].rssi() == 67
+            dbResults[0].messageTypeEnum() == MessageTypeEnumDto.UNKNOWN
+            dbResults[0].dateTime().isBefore(now)
+            dbResults[0].dateTime().isAfter(now.minusMinutes(5))
     }
 
     def "should return 400 because of lacking text property in body"() {
@@ -68,16 +67,16 @@ class BroadcastApiControllerSpringTest extends Specification {
 
         expect:
             webTestClient.post().contentType(MediaType.APPLICATION_JSON).bodyValue(requestJson).exchange().expectStatus().is4xxClientError()
-            broadcastDocumentRepo.count() == 0
+            broadcastDbFacade.count() == 0
     }
 
     def "should return 500 because of database error"() {
         given:
         def requestJson = '{"rssi":67, "text":"radio message"}'
-        1 * broadcastDocumentRepo.save(_) >> {throw new RuntimeException("sth went wrong ;)")}
+        1 * broadcastDbFacade.save(_) >> {throw new RuntimeException("sth went wrong ;)")}
 
         expect:
         webTestClient.post().contentType(MediaType.APPLICATION_JSON).bodyValue(requestJson).exchange().expectStatus().is5xxServerError()
-        broadcastDocumentRepo.count() == 0
+        broadcastDbFacade.count() == 0
     }
 }

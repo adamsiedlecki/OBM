@@ -47,9 +47,9 @@ class BroadcastConverterTest extends Specification {
             def result = sut.convert(broadcastDocument)
 
         then:
-            result.rssi == rssi
-            result.text == text
-            result.dateTime == dateTime
-            result.messageTypeEnum.name() == messageTypeEnum.name()
+            result.rssi() == rssi
+            result.text() == text
+            result.dateTime() == dateTime
+            result.messageTypeEnum().name() == messageTypeEnum.name()
     }
 }
