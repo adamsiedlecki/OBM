@@ -2,7 +2,7 @@ swagger: "2.0"
 info:
   description: "Service for OrchardBroadcastMonitor"
   version: "1.0.0"
-  title: ""
+  title: "OrchardBroadcastMonitorApi"
 tags:
   - name: "OBM"
     externalDocs:

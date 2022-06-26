@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>OBM</artifactId>
+        <groupId>pl.adamsiedlecki.obm</groupId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>webservice</artifactId>
+
+    <properties>
+        <java.version>17</java.version>
+    </properties>
+
+    <dependencies>
+        <!-- OBM -->
+        <dependency>
+            <groupId>pl.adamsiedlecki.obm</groupId>
+            <artifactId>commons</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>pl.adamsiedlecki.obm</groupId>
+            <artifactId>db-mongo</artifactId>
+        </dependency>
+
+        <!-- SPRING -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <!-- OPEN API -->
+        <dependency>
+            <groupId>org.openapitools</groupId>
+            <artifactId>openapi-generator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.openapitools</groupId>
+            <artifactId>jackson-databind-nullable</artifactId>
+        </dependency>
+
+        <!-- LIBS -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+
+        <!-- TEST -->
+        <dependency>
+            <groupId>org.spockframework</groupId>
+            <artifactId>spock-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.spockframework</groupId>
+            <artifactId>spock-spring</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+        </dependency>
+    </dependencies>
+
+   <build>
+       <plugins>
+           <plugin>
+               <groupId>org.springframework.boot</groupId>
+               <artifactId>spring-boot-maven-plugin</artifactId>
+               <configuration>
+                   <mainClass>pl.adamsiedlecki.obm.ObmApplication</mainClass>
+                   <excludes>
+                       <exclude>
+                           <groupId>org.projectlombok</groupId>
+                           <artifactId>lombok</artifactId>
+                       </exclude>
+                   </excludes>
+               </configuration>
+           </plugin>
+           <plugin>
+               <groupId>org.openapitools</groupId>
+               <artifactId>openapi-generator-maven-plugin</artifactId>
+               <version>6.0.0</version>
+               <executions>
+                   <execution>
+                       <goals>
+                           <goal>generate</goal>
+                       </goals>
+                       <configuration>
+                           <inputSpec>${project.basedir}/src/main/resources/swagger/obm-api.yaml</inputSpec>
+                           <generatorName>spring</generatorName>
+                           <configOptions>
+                               <sourceFolder>src/gen/java/main</sourceFolder>
+                           </configOptions>
+                       </configuration>
+                   </execution>
+               </executions>
+           </plugin>
+       </plugins>
+   </build>
+
+</project>

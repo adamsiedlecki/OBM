@@ -1,5 +1,6 @@
-package pl.adamsiedlecki.obm.api;
+package pl.adamsiedlecki.obm.broadcast;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.openapitools.api.BroadcastsApi;
@@ -12,7 +13,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("api/v1")
 @Slf4j
-public class ObmBroadcastApiController implements BroadcastsApi {
+@RequiredArgsConstructor
+public class BroadcastApiController implements BroadcastsApi {
+
+    private final BroadcastProcessorService broadcastService;
 
     @Override
     public ResponseEntity<Void> processBroadcastInformation(BroadcastInfoInput broadcastInfoInput) {
@@ -20,6 +24,7 @@ public class ObmBroadcastApiController implements BroadcastsApi {
         if (StringUtils.isBlank(broadcastInfoInput.getText())) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+        broadcastService.process(broadcastInfoInput);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }
