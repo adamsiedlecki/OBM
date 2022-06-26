@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 public class BroadcastDocument {
 
     @Id
-    private Long id;
+    private String id;
     private int rssi;
     private String text;
     private LocalDateTime dateTime;

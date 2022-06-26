@@ -41,7 +41,7 @@ class BroadcastConverterTest extends Specification {
             def text = "{bbb}"
             def dateTime = LocalDateTime.now()
             def messageTypeEnum = MessageTypeEnum.UNKNOWN
-            def broadcastDocument = new BroadcastDocument(11, rssi, text, dateTime, messageTypeEnum)
+            def broadcastDocument = new BroadcastDocument("any-id", rssi, text, dateTime, messageTypeEnum)
 
         when:
             def result = sut.convert(broadcastDocument)
