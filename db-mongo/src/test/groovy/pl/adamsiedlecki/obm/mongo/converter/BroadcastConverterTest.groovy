@@ -1,6 +1,6 @@
 package pl.adamsiedlecki.obm.mongo.converter
 
-import com.fasterxml.jackson.databind.ObjectMapper
+
 import pl.adamsiedlecki.obm.config.ObmConfiguration
 import pl.adamsiedlecki.obm.dto.BroadcastDto
 import pl.adamsiedlecki.obm.dto.MessageTypeEnumDto
@@ -22,7 +22,7 @@ class BroadcastConverterTest extends Specification {
             def rssi = 23
             def text = "{aaa}"
             def dateTime = LocalDateTime.now()
-            def messageTypeEnum = MessageTypeEnumDto.TEMPERATURE
+            def messageTypeEnum = MessageTypeEnumDto.TEMPERATURE_REQUEST
             def broadcastDto = new BroadcastDto(rssi, text, dateTime, messageTypeEnum)
 
         when:

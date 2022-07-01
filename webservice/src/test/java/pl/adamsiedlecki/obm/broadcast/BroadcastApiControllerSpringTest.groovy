@@ -43,9 +43,10 @@ class BroadcastApiControllerSpringTest extends Specification {
         broadcastDbFacade.deleteAll()
     }
 
-    def "should process request correctly and save broadcast to database"() {
+    def "should process request correctly and save broadcast to database as unknown"() {
         given:
-            def requestJson = '{"rssi":67, "text":"radio message"}'
+            def textBase64 = Base64.getEncoder().encodeToString("radio message".getBytes())
+            def requestJson = '{"rssi":67, "text":"' + textBase64 + '"}'
 
         expect:
             webTestClient.post().contentType(MediaType.APPLICATION_JSON).bodyValue(requestJson).exchange().expectStatus().is2xxSuccessful()
@@ -61,6 +62,27 @@ class BroadcastApiControllerSpringTest extends Specification {
             dbResults[0].dateTime().isAfter(now.minusMinutes(5))
     }
 
+    def "should process request correctly and save broadcast to database as temperature request"() {
+        given:
+            def text = '{"tid":4,"cmm":"tR"}'
+            def textBase64 = Base64.getEncoder().encodeToString(text.getBytes())
+            def requestJson = '{"rssi":67, "text":"' + textBase64 + '"}'
+
+
+        expect:
+            webTestClient.post().contentType(MediaType.APPLICATION_JSON).bodyValue(requestJson).exchange().expectStatus().is2xxSuccessful()
+
+        def dbResults = broadcastDbFacade.findAll()
+            LocalDateTime now = LocalDateTime.now()
+
+            dbResults.size() == 1
+            dbResults[0].text() == text
+            dbResults[0].rssi() == 67
+            dbResults[0].messageTypeEnum() == MessageTypeEnumDto.TEMPERATURE_REQUEST
+            dbResults[0].dateTime().isBefore(now)
+            dbResults[0].dateTime().isAfter(now.minusMinutes(5))
+    }
+
     def "should return 400 because of lacking text property in body"() {
         given:
             def requestJson = '{"rssi":67}'
@@ -72,11 +94,13 @@ class BroadcastApiControllerSpringTest extends Specification {
 
     def "should return 500 because of database error"() {
         given:
-        def requestJson = '{"rssi":67, "text":"radio message"}'
-        1 * broadcastDbFacade.save(_) >> {throw new RuntimeException("sth went wrong ;)")}
+            def text = '{"tid":4,"cmm":"tR"}'
+            def textBase64 = Base64.getEncoder().encodeToString(text.getBytes())
+            def requestJson = '{"rssi":67, "text":"' + textBase64 + '"}'
+            1 * broadcastDbFacade.save(_) >> {throw new RuntimeException("sth went wrong ;)")}
 
         expect:
-        webTestClient.post().contentType(MediaType.APPLICATION_JSON).bodyValue(requestJson).exchange().expectStatus().is5xxServerError()
-        broadcastDbFacade.count() == 0
+            webTestClient.post().contentType(MediaType.APPLICATION_JSON).bodyValue(requestJson).exchange().expectStatus().is5xxServerError()
+            broadcastDbFacade.count() == 0
     }
 }

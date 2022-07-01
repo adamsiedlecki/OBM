@@ -1,0 +1,16 @@
+{
+  "$schema": "http://obm-adamsiedlecki.pl",
+  "title": "voltage response",
+  "description": "JSON representation of voltage response",
+  "type": "object",
+  "properties": {
+    "a": {
+      "type": "integer"
+    },
+    "v": {
+      "type": "number"
+    }
+  },
+  "required": [ "a", "v" ],
+  "additionalProperties": false
+}

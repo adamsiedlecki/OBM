@@ -1,0 +1,16 @@
+{
+  "$schema": "http://obm-adamsiedlecki.pl",
+  "title": "humidity response",
+  "description": "JSON representation of humidity response",
+  "type": "object",
+  "properties": {
+    "a": {
+      "type": "integer"
+    },
+    "hu": {
+      "type": "number"
+    }
+  },
+  "required": [ "a", "hu" ],
+  "additionalProperties": false
+}

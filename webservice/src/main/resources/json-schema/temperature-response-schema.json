@@ -1,0 +1,16 @@
+{
+  "$schema": "http://obm-adamsiedlecki.pl",
+  "title": "temperature response",
+  "description": "JSON representation of temperature response",
+  "type": "object",
+  "properties": {
+    "a": {
+      "type": "integer"
+    },
+    "tp": {
+      "type": "number"
+    }
+  },
+  "required": [ "a", "tp" ],
+  "additionalProperties": false
+}

@@ -1,0 +1,17 @@
+{
+  "$schema": "http://obm-adamsiedlecki.pl",
+  "title": "voltage request",
+  "description": "JSON representation of voltage request",
+  "type": "object",
+  "properties": {
+    "tid": {
+      "type": "integer"
+    },
+    "cmm": {
+      "type": "string",
+      "enum": ["vR"]
+    }
+  },
+  "required": [ "tid", "cmm" ],
+  "additionalProperties": false
+}

@@ -1,0 +1,17 @@
+{
+  "$schema": "http://obm-adamsiedlecki.pl",
+  "title": "temperature request",
+  "description": "JSON representation of temperature request",
+  "type": "object",
+  "properties": {
+    "tid": {
+      "type": "integer"
+    },
+    "cmm": {
+      "type": "string",
+      "enum": ["tR"]
+    }
+  },
+  "required": [ "tid", "cmm" ],
+  "additionalProperties": false
+}

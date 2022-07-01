@@ -1,0 +1,17 @@
+{
+  "$schema": "http://obm-adamsiedlecki.pl",
+  "title": "humidity request",
+  "description": "JSON representation of humidity request",
+  "type": "object",
+  "properties": {
+    "tid": {
+      "type": "integer"
+    },
+    "cmm": {
+      "type": "string",
+      "enum": ["hR"]
+    }
+  },
+  "required": [ "tid", "cmm" ],
+  "additionalProperties": false
+}
