@@ -45,7 +45,7 @@ definitions:
         description: "Received Signal Strength Indication"
         type: integer
       text:
-        description: "Text representation of the broadcast"
+        description: "Text representation of the broadcast encoded in base64"
         type: string
     required:
       - text
