@@ -19,6 +19,7 @@ public enum MessageTypeEnum {
 
     DEVICE_OFF_REQUEST,
     DEVICE_OFF_RESPONSE,
+    GPS_BROADCAST,
 
     UNKNOWN
 }

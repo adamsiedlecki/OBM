@@ -47,6 +47,9 @@ public class MessageTypeCheckerService {
             if (isJsonSchemaValidationSuccessful(subjectUnderCheck, "json-schema/voltage-response-schema.json")) {
                 return MessageTypeEnumDto.VOLTAGE_RESPONSE;
             }
+            if (isJsonSchemaValidationSuccessful(subjectUnderCheck, "json-schema/gps-broadcast-schema.json")) {
+                return MessageTypeEnumDto.GPS_BROADCAST;
+            }
 
 
         } catch (Exception e) {

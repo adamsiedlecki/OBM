@@ -41,8 +41,14 @@ class MessageTypeCheckerServiceTest extends Specification {
             sut.check('{a:2,hu:60.63}') == MessageTypeEnumDto.HUMIDITY_RESPONSE
     }
 
+    def "should state that this is gps broadcast"() {
+        expect:
+        sut.check('{a:10,lat:51.8473871,lng:20.9270731}') == MessageTypeEnumDto.GPS_BROADCAST
+    }
+
     def "should state that text has unknown schema"() {
         expect:
         sut.check('whatever') == MessageTypeEnumDto.UNKNOWN
     }
+
 }

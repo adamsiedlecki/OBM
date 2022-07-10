@@ -1,0 +1,19 @@
+{
+  "$schema": "http://obm-adamsiedlecki.pl",
+  "title": "gps broadcast",
+  "description": "JSON representation of gps broadcast",
+  "type": "object",
+  "properties": {
+    "a": {
+      "type": "integer"
+    },
+    "lat": {
+      "type": "number"
+    },
+    "lng": {
+      "type": "number"
+    }
+  },
+  "required": [ "a", "lat", "lng" ],
+  "additionalProperties": false
+}
