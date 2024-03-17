@@ -5,6 +5,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 @Document(value = "broadcasts")
 @Getter
@@ -19,4 +20,5 @@ public class BroadcastDocument {
     private String text;
     private LocalDateTime dateTime;
     private MessageTypeEnum messageTypeEnum;
+    private Map<String,Object> textParsed;
 }

@@ -1,5 +1,7 @@
 package pl.adamsiedlecki.obm.broadcast;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.openapitools.model.BroadcastInfoInput;
@@ -11,6 +13,8 @@ import pl.adamsiedlecki.obm.facade.BroadcastDbFacade;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -19,6 +23,7 @@ public class BroadcastProcessorService {
 
     private final BroadcastDbFacade broadcastDbFacade;
     private final MessageTypeCheckerService messageTypeCheckerService;
+    private final ObjectMapper objectMapper;
 
     public void process(BroadcastInfoInput broadcastInfoInput) {
         saveToDb(broadcastInfoInput);
@@ -35,7 +40,16 @@ public class BroadcastProcessorService {
         String decodedText = new String(decoded, StandardCharsets.UTF_8);
         MessageTypeEnumDto messageType = messageTypeCheckerService.check(decodedText);
 
-        BroadcastDto broadcastDto = new BroadcastDto(input.getRssi(), decodedText, LocalDateTime.now(), messageType);
+        Map<String, Object> parsedText = null;
+
+        try {
+            parsedText = objectMapper.readValue(decoded, new TypeReference<HashMap<String,Object>>() {});
+        } catch (Exception e) {
+            log.info("Text cannot be parsed as json: " + decodedText);
+        }
+
+        BroadcastDto broadcastDto = new BroadcastDto(input.getRssi(), decodedText, LocalDateTime.now(), messageType, parsedText);
+
         broadcastDbFacade.save(broadcastDto);
     }
 }

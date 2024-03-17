@@ -23,7 +23,7 @@ class BroadcastConverterTest extends Specification {
             def text = "{aaa}"
             def dateTime = LocalDateTime.now()
             def messageTypeEnum = MessageTypeEnumDto.TEMPERATURE_REQUEST
-            def broadcastDto = new BroadcastDto(rssi, text, dateTime, messageTypeEnum)
+            def broadcastDto = new BroadcastDto(rssi, text, dateTime, messageTypeEnum, null)
 
         when:
             def result = sut.convert(broadcastDto)
@@ -41,7 +41,7 @@ class BroadcastConverterTest extends Specification {
             def text = "{bbb}"
             def dateTime = LocalDateTime.now()
             def messageTypeEnum = MessageTypeEnum.UNKNOWN
-            def broadcastDocument = new BroadcastDocument("any-id", rssi, text, dateTime, messageTypeEnum)
+            def broadcastDocument = new BroadcastDocument("any-id", rssi, text, dateTime, messageTypeEnum, null)
 
         when:
             def result = sut.convert(broadcastDocument)

@@ -83,6 +83,29 @@ class BroadcastApiControllerSpringTest extends Specification {
             dbResults[0].dateTime().isAfter(now.minusMinutes(5))
     }
 
+    def "should process request and put text parsed correctly"() {
+        given:
+        def text = '{"tid":4,"cmm":"tR", "object": {"cat": ["meeeow", "meow"]}}'
+        def textBase64 = Base64.getEncoder().encodeToString(text.getBytes())
+        def requestJson = '{"rssi":67, "text":"' + textBase64 + '"}'
+
+
+        expect:
+        webTestClient.post().contentType(MediaType.APPLICATION_JSON).bodyValue(requestJson).exchange().expectStatus().is2xxSuccessful()
+
+        def dbResults = broadcastDbFacade.findAll()
+        LocalDateTime now = LocalDateTime.now()
+
+        dbResults.size() == 1
+        dbResults[0].text() == text
+        dbResults[0].rssi() == 67
+        dbResults[0].messageTypeEnum() == MessageTypeEnumDto.UNKNOWN
+        dbResults[0].dateTime().isBefore(now)
+        dbResults[0].dateTime().isAfter(now.minusMinutes(5))
+        dbResults[0].textParsed().get("tid") == 4
+        (dbResults[0].textParsed().get("object") as Map).get("cat")[1] == "meow"
+    }
+
     def "should return 400 because of lacking text property in body"() {
         given:
             def requestJson = '{"rssi":67}'
