@@ -1,11 +1,13 @@
 package pl.adamsiedlecki.obm.broadcast
 
+import org.openapitools.model.BroadcastListOutput
 import org.spockframework.spring.SpringSpy
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.server.LocalServerPort
 import org.springframework.http.MediaType
 import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
+import org.springframework.test.web.reactive.server.EntityExchangeResult
 import org.springframework.test.web.reactive.server.WebTestClient
 import org.testcontainers.containers.MongoDBContainer
 import pl.adamsiedlecki.obm.dto.MessageTypeEnumDto
@@ -130,6 +132,21 @@ class BroadcastApiControllerSpringTest extends Specification {
             webTestClient.post().contentType(MediaType.APPLICATION_JSON).bodyValue(requestJson).exchange().expectStatus().is2xxSuccessful()
             sleepSeconds(1)
             broadcastDbFacade.count() == 0
+    }
+
+    def "should return broadcasts from database"() {
+        given:
+        def textBase64 = Base64.getEncoder().encodeToString("radio message".getBytes())
+        def requestJson = '{"rssi":67, "text":"' + textBase64 + '"}'
+
+        webTestClient.post().contentType(MediaType.APPLICATION_JSON).bodyValue(requestJson).exchange().expectStatus().is2xxSuccessful()
+        webTestClient.post().contentType(MediaType.APPLICATION_JSON).bodyValue(requestJson).exchange().expectStatus().is2xxSuccessful()
+        webTestClient.post().contentType(MediaType.APPLICATION_JSON).bodyValue(requestJson).exchange().expectStatus().is2xxSuccessful()
+
+        expect:
+        sleepSeconds(1)
+        def result = webTestClient.get().exchange().expectStatus().is2xxSuccessful().expectBody(BroadcastListOutput).returnResult()
+        result.getResponseBody().bList.size() == 3
     }
 
     def sleepSeconds(int seconds) {

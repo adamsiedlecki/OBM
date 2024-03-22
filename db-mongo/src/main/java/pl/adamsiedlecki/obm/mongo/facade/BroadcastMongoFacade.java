@@ -7,6 +7,7 @@ import pl.adamsiedlecki.obm.facade.BroadcastDbFacade;
 import pl.adamsiedlecki.obm.mongo.converter.BroadcastConverter;
 import pl.adamsiedlecki.obm.mongo.repo.BroadcastDocumentRepo;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -34,5 +35,14 @@ public class BroadcastMongoFacade implements BroadcastDbFacade {
     @Override
     public long count() {
         return broadcastDocumentRepo.count();
+    }
+
+
+    @Override
+    public List<BroadcastDto> findByDateTimeBetweenOrderByDateTimeDesc(LocalDateTime start, LocalDateTime end) {
+        return broadcastDocumentRepo.findByDateTimeBetweenOrderByDateTimeDesc(start, end)
+                .stream()
+                .map(broadcastConverter::convert)
+                .toList();
     }
 }

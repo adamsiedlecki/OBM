@@ -126,7 +126,12 @@
                            <generatorName>spring</generatorName>
                            <configOptions>
                                <sourceFolder>src/gen/java/main</sourceFolder>
+                               <dateLibrary>custom</dateLibrary>
                            </configOptions>
+                           <typeMappings>
+                               <typeMapping>DateTime=java.time.LocalDateTime</typeMapping>
+                               <typeMapping>Date=Date</typeMapping>
+                           </typeMappings>
                        </configuration>
                    </execution>
                </executions>
