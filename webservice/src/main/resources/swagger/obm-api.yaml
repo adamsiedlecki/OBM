@@ -36,6 +36,22 @@ paths:
           description: "Bad request, text property is required!"
         "500":
           description: "Unexpected error."
+    get:
+      tags:
+        - "OBM"
+      summary: "Gives recent broadcasts"
+      operationId: "getBroadcastInformation"
+      produces:
+        - "application/json"
+      responses:
+        "200":
+          description: "OK"
+          schema:
+            $ref: "#/definitions/BroadcastListOutput"
+        "400":
+          description: "Bad request, text property is required!"
+        "500":
+          description: "Unexpected error."
 
 definitions:
   BroadcastInfoInput:
@@ -49,3 +65,26 @@ definitions:
         type: string
     required:
       - text
+
+  BroadcastListOutput:
+    type: "object"
+    properties:
+      bList:
+        description: "Received Signal Strength Indication"
+        type: array
+        items:
+          $ref: "#/definitions/Broadcast"
+    required:
+      - bList
+
+  Broadcast:
+    type: "object"
+    properties:
+      text:
+        type: string
+      dateTime:
+        type: string
+        format: date-time
+    required:
+      - text
+      - dateTime
