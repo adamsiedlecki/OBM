@@ -26,11 +26,7 @@ public class BroadcastApiController implements BroadcastsApi {
         if (StringUtils.isBlank(broadcastInfoInput.getText())) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        try {
-            broadcastService.process(broadcastInfoInput);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        broadcastService.process(broadcastInfoInput);
         long end = System.currentTimeMillis();
         log.info("Processing took: {} millis", end-start);
         return new ResponseEntity<>(HttpStatus.OK);

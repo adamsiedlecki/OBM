@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.openapitools.model.BroadcastInfoInput;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import pl.adamsiedlecki.obm.dto.BroadcastDto;
 import pl.adamsiedlecki.obm.dto.MessageTypeEnumDto;
@@ -25,6 +26,7 @@ public class BroadcastProcessorService {
     private final MessageTypeCheckerService messageTypeCheckerService;
     private final ObjectMapper objectMapper;
 
+    @Async
     public void process(BroadcastInfoInput broadcastInfoInput) {
         saveToDb(broadcastInfoInput);
     }
